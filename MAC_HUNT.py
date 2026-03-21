@@ -1,7 +1,7 @@
 import sys
 from scapy.all import ARP, Ether, srp, conf
 
-class local_prep:
+class local_prep():
     def __init__ (self):
         pass
     
