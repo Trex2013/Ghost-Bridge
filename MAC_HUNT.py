@@ -1,3 +1,4 @@
+import sys
 from scapy.all import ARP, Ether, srp, conf
 
 class local_prep:
@@ -37,10 +38,14 @@ class local_prep:
         target_ip = book[target-1]['ip']
         target_mac = book[target-1]['mac']
         gateway_ip = self.default_gate()
-        
+        gateway_mac = None
         for entry in book:
             if entry['ip']==gateway_ip:
                 gateway_mac=entry['mac']
                 break
+        
+        if gateway_mac is None:
+            print("Gateway MAC address not found in the scan results.")
+            sys.exit(1)
             
         return target_ip, target_mac, gateway_ip, gateway_mac
