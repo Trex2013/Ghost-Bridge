@@ -30,7 +30,7 @@ class local_prep():
                 manufacturer = "Randomly Generated MAC Address"
                 return manufacturer
         else: 
-            manufacturer = oui_dict.get(mac_oui_part.lower(), "Unknown Not Found")
+            manufacturer = oui_dict.get(mac_oui_part.lower(), "Unknown Not Found") #get used to locate the value assigned with "Assignment" key in the dict, else ---> not found
         
             
         return manufacturer          

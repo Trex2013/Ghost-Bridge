@@ -37,13 +37,13 @@ class local_os():
     def __init__ (self):
         pass
     
-    def open_terminal(self):
-        if platform.system() == "windows":
-            subprocess.Popen(['start' , 'cmd' , '/k' , 'python SPY.py'], shell=True)
-        elif platform.system() == "linux":
-            subprocess.Popen(['gnome-terminal', '--', 'sudo', 'python3', 'SPY.py']) 
-        elif platform.system() == "darwin":
-            subprocess.Popen(['open', '-a', 'Terminal.app', '--args', 'python3', 'SPY.py'])          
+    def open_terminal(self, target_ip):
+        if platform.system().lower() == "windows":
+            subprocess.Popen(['start' , 'cmd' , '/k' , f'python SPY.py {target_ip}'], shell=True)
+        elif platform.system().lower() == "linux":
+            subprocess.Popen(['gnome-terminal', '--', 'sudo', 'python3', 'SPY.py', target_ip]) 
+        elif platform.system().lower() == "darwin":
+            subprocess.Popen(['open', '-a', 'Terminal.app', '--args', 'python3', 'SPY.py', target_ip])          
             
 class main():
     def __init__ (self):
@@ -59,7 +59,7 @@ class main():
         else:    
             print("[+] Hijacking...\n[#]Spawning Spy Terminal...\n[!] Press Ctrl+C to Stop and Restore ARP Tables")
             self.spoof.lie(self.target_ip,self.target_mac,self.gateway_ip,self.gateway_mac)
-            self.local_os.open_terminal()
+            self.local_os.open_terminal(self.target_ip)
             
             try:
                 while True:
