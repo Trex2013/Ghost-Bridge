@@ -3,11 +3,30 @@ import sys
 from scapy.layers.http import HTTPRequest 
 load_layer("tls")
 from scapy.layers.tls.handshake import TLSClientHello
-from scapy.layers.tls.extensions import  TLS_Ext_ServerName
+from scapy.layers.tls.extensions import TLS_Ext_ServerName
+import logging
+import geoip2.database
+
+logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
+
+ip_cache = {}
+class mmdb():
+    def __init__ (self):
+        pass
+    
+    def read (self, ip):
+       try: 
+           with geoip2.database.Reader('GeoLite2-ASN.mmdb') as file:
+               results = file.asn(ip)
+               return results.autonomous_system_organization
+           
+       except Exception as e:
+           return None    
 class spy():
   def __init__(self,target_ip):
     self.target_ip=target_ip.strip()
     print(f"[-] Initialized Spy for: {self.target_ip}")
+    self.reader=mmdb()
 
   def extraction(self,packet):
     if packet.haslayer(IP) and packet[IP].src==self.target_ip:
@@ -36,7 +55,15 @@ class spy():
          elif packet.haslayer(UDP) and packet[UDP].dport==443: #udp 443 quic
                     try:
                         raw_IP=packet[IP].dst
-                        print(f"[+] (QUIC-High speed Streaming) Visited: {raw_IP}")
+                        if raw_IP not in ip_cache:
+                            org_name=self.reader.read(raw_IP)
+                            ip_cache[raw_IP]=org_name
+                            clean_data=org_name if org_name else raw_IP
+                            
+                        else:
+                            clean_data=ip_cache[raw_IP]
+                            
+                        print(f"[+] (QUIC-High speed Streaming) Visited: {clean_data}")
                     except:
                         pass
 
